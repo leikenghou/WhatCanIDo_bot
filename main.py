@@ -9,11 +9,22 @@ Created on Wed Aug 16 10:11:56 2023
 import discord
 import requests
 import json
+import random
 
 #open 'Token.json'file
 with open('Token.json','r') as token_file:
     file = json.load(token_file)
     Token = file['Token']
+
+
+sad_words = ["sad", "depressed", "unhappy", "angry", "miserable"]
+
+starter_encouragements = [
+  "Cheer up!",
+  "Hang in there.",
+  "You are a great person / bot!"
+]
+
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -35,6 +46,8 @@ async def on_message(message):
     if message.author == client.user:
         return
     
+    msg = message.content
+    
     if message.content.startswith('$hello'):
         await message.channel.send('hello!')
         
@@ -42,5 +55,8 @@ async def on_message(message):
         quoto = get_quote()
         await message.channel.send(quoto)
         
+    if any(word in msg for word in sad_words):
+        await message.channel.send(random.choice(starter_encouragements))
+
 
 client.run(Token)
